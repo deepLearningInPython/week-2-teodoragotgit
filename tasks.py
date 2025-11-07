@@ -18,8 +18,19 @@ from sklearn import datasets
 # Copy and paste the code for that function here:
 # -----------------------------------------------
 def my_mlp(w, X, sigma=np.tanh):
+  # Construct between-layer connection weights
+  W1 = w[0:24].reshape(4, 6)          # first 4*6 = 24 values
+  W2 = w[24:52].reshape(7, 4)         # next 7*4 = 28 values
+  W3 = w[52:59].reshape(1, 7)         # last 1*7 = 7 values
 
-    return f
+  # Implement the equations (forward propagation)
+  a1 = sigma(W1 @ X)                  # input -> layer 1
+  a2 = sigma(W2 @ a1)                 # layer 1 -> layer 2
+  f = sigma(W3 @ a2)                  # layer 2 -> output
+
+
+
+  return f
 # -----------------------------------------------
  
 # Task 2:
@@ -33,8 +44,11 @@ def my_mlp(w, X, sigma=np.tanh):
 # Copy and paste the code for that function here:
 # -----------------------------------------------
 def MSE_func(w, X, y): # give the appropriate name and arguments
+  f = my_mlp(w, X)           
+  MSE = np.sum((f - y)**2)    # sum of squared errors
 
-    return MSE
+
+  return MSE
 # -----------------------------------------------
  
 # Task 3:
@@ -50,8 +64,21 @@ def MSE_func(w, X, y): # give the appropriate name and arguments
 # Copy and paste the code for that function here:
 # -----------------------------------------------
 def dR(beta, x, y):
+    # unpack parameters
+    beta0, beta1 = beta
+    
+    # number of samples
+    N = len(x)
+    
     # implement the above formula for dR/dβ₀
     # implement the above formula for dR/dβ₁
+    
+    # compute residuals (predicted - actual)
+    residuals = (beta0 + beta1 * x) - y
+    
+    # compute derivatives
+    dbeta_0 = (2 / N) * np.sum(residuals)
+    dbeta_1 = (2 / N) * np.sum(residuals * x) 
+
     return np.array([dbeta_0, dbeta_1])
- 
 # -----------------------------------------------
